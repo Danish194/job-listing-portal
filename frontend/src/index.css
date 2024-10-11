@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.toast-container {
+    max-width: 100%;
+    width: auto;
+    padding: 10px;
+    margin: 0 auto;
+    z-index: 9999;
+    color: rgb(228, 22, 22);
+  }
+  
+  @media (max-width: 768px) {
+    .Toastify__toast {
+      font-size: 14px; /* Smaller font for smaller screens */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .Toastify__toast {
+      font-size: 16px; /* Default font for medium and larger screens */
+    }
+  }
+  
+  .Toastify__toast--success {
+    background-color: #28a745;
+  }
+  
+  .Toastify__toast--error {
+    background-color: #dc3545;
+  }
+  
+  .Toastify__toast-body {
+    color: #ffffff;
+  }
+  
+  .Toastify__close-button {
+    color: #ffffff;
+  }
+  

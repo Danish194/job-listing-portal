@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { auth } from '../services/firebase'; // Firebase auth instance
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { db } from '../services/firebase'; // Firebase Firestore instance
 import { setDoc, doc } from 'firebase/firestore'; // Firestore methods
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
@@ -14,6 +13,8 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const recaptchaRef = React.createRef();
   const key = import.meta.env.VITE_RECAPTCHA_KEY;
+
+  const [role, setRole] = useState('role')
 
   const navigate = useNavigate();
 
@@ -32,6 +33,7 @@ const RegisterForm = () => {
         await setDoc(doc(db, "Users", user.uid), {
           name,
           email,
+          role,
           createdAt: new Date(),
         });
 
@@ -39,15 +41,14 @@ const RegisterForm = () => {
         setName('');
         setEmail('');
         setPassword('');
+        setRole('role'); // Reset to default role
 
         // Notify user of successful registration
-        alert("User registered successfully");
         toast.success("User registered successfully", { position: "top-center" });
 
         navigate('/login');
 
       } catch (error) {
-        alert(error.message);
         toast.error(error.message, { position: "bottom-center" });
       }
     } else {
@@ -57,7 +58,7 @@ const RegisterForm = () => {
 
   return (
     <div className="h-full mb-0 flex items-center justify-center bg-backgroundBlue pt-16 pb-32">
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg mt-16">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Register</h2>
 
         <input
@@ -69,6 +70,18 @@ const RegisterForm = () => {
           required
         />
 
+        {/* Role Selection */}
+        <select
+          className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          required
+        >
+          <option value="role">Role</option>
+          <option value="applicant">Applicant</option>
+          <option value="recruiter">Recruiter</option>
+        </select>
+
         <input
           type="email"
           placeholder="Email"
@@ -76,6 +89,7 @@ const RegisterForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+        
         />
 
         <input
@@ -96,6 +110,15 @@ const RegisterForm = () => {
         <button type="submit" className="w-full mt-6 bg-Authbutton p-10 text-white py-3 rounded-lg hover:bg-blue-950 transition duration-300">
           Register
         </button>
+
+        {/* Section for login link */}
+        <div className="text-center mt-6">
+          <p className="text-gray-600">Already have an account?
+            <Link to="/login" className="text-blue-600 hover:underline">
+              Login
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );
