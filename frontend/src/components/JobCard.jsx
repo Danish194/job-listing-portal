@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const JobCard = ({ job }) => {
   return (
@@ -14,9 +15,13 @@ const JobCard = ({ job }) => {
       <p className="text-gray-700 mb-2"><span className="font-medium">Experience Required:</span> {job.experience} years</p>
       <p className="text-gray-700 mb-2"><span className="font-medium">Salary:</span> ${job.salary}</p>
       <p className="text-gray-500 mb-4">{job.description.slice(0, 120)}...</p>
-      <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors duration-300 w-full">
-        Apply Now
-      </button>
+
+      {/* Link to the job application form */}
+      <Link to={`/apply/${job.id}`}>
+        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors duration-300 w-full">
+          Apply Now
+        </button>
+      </Link>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { auth } from '../services/firebase';
 import { toast } from 'react-toastify';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -11,9 +12,6 @@ const LoginForm = () => {
   const recaptchaRef = React.createRef();
   const navigate = useNavigate();
   const key = import.meta.env.VITE_RECAPTCHA_KEY;
-
-  const [role, setRole] = useState('role'); // State to track role selection
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,18 +22,27 @@ const LoginForm = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log(user, role); // Role is logged as well
+
+        // Fetch additional user data from your backend using the email
+        const response = await axios.post('/api/auth/login', { email, password });
+        const { token: jwtToken, user: userData } = response.data;
+
+        // Store token and user information
+        localStorage.setItem('token', jwtToken);
+        localStorage.setItem('userRole', userData.role); // Store user role
 
         // Clear form fields after successful login
         setEmail('');
         setPassword('');
-        setRole('');
 
-        // Show success notification and redirect
+        // Show success notification and redirect based on role
         toast.success('Login successful!', { position: "top-center" });
-        navigate('/profile');
+        if (userData.role === 'employer') {
+          navigate('/employer-dashboard');
+        } else if (userData.role === 'jobseeker') {
+          navigate('/jobseeker-dashboard');
+        }
       } catch (error) {
-        // Display error notification based on Firebase error codes
         switch (error.code) {
           case 'auth/user-not-found':
             toast.error('User not found. Please check your email.', { position: "top-center" });
@@ -70,7 +77,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="h-full mb-0 flex items-center justify-center bg-backgroundBlue pt-16 pb-48">
+    <div className="h-full mb-0 flex items-center justify-center bg-backgroundBlue pt-16 pb-48 w-screen">
       <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg mt-16">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h2>
 
@@ -82,17 +89,6 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="role">Role</option>
-          <option value="jobseeker">Applicant</option>
-          <option value="employer">Recruiter</option>
-        </select>
 
         <input
           type="password"
@@ -124,9 +120,9 @@ const LoginForm = () => {
         {/* Section for register link */}
         <div className="text-center mt-6">
           <p className="text-gray-600">Don't have an account?
-          <Link to="/register" className="text-blue-600 hover:underline p-2">
-            Create an account
-          </Link>
+            <Link to="/register" className="text-blue-600 hover:underline p-2">
+              Create an account
+            </Link>
           </p>
         </div>
       </form>

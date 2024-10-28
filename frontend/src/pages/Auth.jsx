@@ -5,11 +5,19 @@ import RegisterForm from '../components/RegisterForm';
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
 
+  const handleLoginClick = () => {
+    setIsLogin(true);
+  };
+
+  const handleRegisterClick = () => {
+    setIsLogin(false);
+  };
+
   return (
     <div className="p-4">
-      <div className="flex justify-center">
-        <button onClick={() => setIsLogin(true)} className="mr-4">Login</button>
-        <button onClick={() => setIsLogin(false)}>Register</button>
+      <div className="flex justify-center mb-4">
+        <button onClick={handleLoginClick} className="mr-4">Login</button>
+        <button onClick={handleRegisterClick}>Register</button>
       </div>
       {isLogin ? <LoginForm /> : <RegisterForm />}
     </div>

@@ -6,7 +6,7 @@ const applicationSchema = new mongoose.Schema({
   resume: { type: String, required: true }, // Path or URL to the resume
   coverLetter: { type: String },
   dateApplied: { type: Date, default: Date.now },
-});
+}, { timestamps: true });
 
 const Application = mongoose.model('Application', applicationSchema);
 export default Application;

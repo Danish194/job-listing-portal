@@ -1,4 +1,4 @@
-import { FaGoogle, FaMicrosoft, FaAmazon, FaFacebook, FaApple, FaTwitter } from 'react-icons/fa';
+import { FaGoogle, FaMicrosoft, FaAmazon, FaFacebook, FaApple, FaTwitter, FaTwitterSquare } from 'react-icons/fa';
 
 const TopCompaniesSection = () => {
   const companies = [

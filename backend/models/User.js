@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+const userSchema = new mongoose.Schema({
+  uid: { type: String, required: true, unique: true }, // Firebase UID
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
+  role: { type: String, enum: ['applicant', 'employer'], required: true },
+  name: { type: String, required: true },
+  appliedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
+  postedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
+}, { timestamps: true });
 
-const User = mongoose.model('User', UserSchema);
-
+const User = mongoose.model('User', userSchema);
 export default User;

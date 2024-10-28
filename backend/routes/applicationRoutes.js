@@ -1,9 +1,8 @@
 import express from 'express';
-import { applyForJob } from '../controllers/applicationController.js'; // Ensure this path is correct
-import authMiddleware from '../middleware/authMiddleware.js'; // Ensure this path is correct
+import { applyForJob } from '../controllers/applicationController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/apply', authMiddleware, applyForJob); // Route to apply for jobs
-
+router.post('/apply', authMiddleware, applyForJob); 
 export default router;
